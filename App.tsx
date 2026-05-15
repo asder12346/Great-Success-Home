@@ -34,6 +34,7 @@ import utakoTerraceVideo1 from './111.mp4';
 import utakoTerraceVideo2 from './112.mp4';
 import kubwaHouseVideo from './kubwahouse.mp4';
 import semiDetachedVideo from './semi datached .mp4';
+import ogaVideo from './ogavid.mp4';
 import detachedDuplexImg from './detached duplex.jpeg';
 import companyLogo from './GS HOME.png';
 import eidMubarakImg from './eid mubarak.jpeg';
@@ -757,19 +758,17 @@ const App: React.FC = () => {
                                 {/* NEW: Video & Side-by-Side Image Row */}
                                 <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                                     {/* Video Column */}
-                                    <div className="rounded-3xl overflow-hidden shadow-xl relative aspect-video group cursor-pointer hover:border-gs-gold/50 transition-colors">
-                                        <img
-                                            src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                            alt="Great Success Homes Corporate Overview and Property Showcase"
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                            loading="lazy"
+                                    <div className="rounded-3xl overflow-hidden shadow-xl relative aspect-video group bg-slate-900">
+                                        <video
+                                            src={ogaVideo}
+                                            className="w-full h-full object-cover"
+                                            controls
+                                            playsInline
+                                            preload="metadata"
+                                            aria-label="Great Success Homes Corporate Overview and Property Showcase"
                                         />
-                                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                                            <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                                                <Play size={32} className="text-white fill-white ml-1" />
-                                            </div>
-                                        </div>
-                                        <div className="absolute bottom-6 left-6 text-white z-10">
+                                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent"></div>
+                                        <div className="pointer-events-none absolute bottom-6 left-6 text-white z-10">
                                             <h3 className="font-bold text-xl drop-shadow-md">Our Journey</h3>
                                             <p className="text-white/80 text-sm">Watch how we build dreams</p>
                                         </div>
@@ -1076,36 +1075,23 @@ const App: React.FC = () => {
                                     </div>
 
                                     {/* Right: Contact Form */}
-                                    <div className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl border-t-8 border-gs-gold relative">
+                                    <div className="bg-white p-4 md:p-6 rounded-3xl shadow-2xl border-t-8 border-gs-gold relative overflow-hidden">
                                         <div className="absolute top-0 right-0 w-32 h-32 bg-gs-green/5 rounded-bl-full pointer-events-none"></div>
-                                        <h3 className="font-serif text-2xl font-bold text-slate-900 mb-6">Send us a message</h3>
-                                        <form className="space-y-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-sm font-bold text-slate-700 mb-1">First Name</label>
-                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-gs-green transition-shadow hover:bg-white" placeholder="John" />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-sm font-bold text-slate-700 mb-1">Last Name</label>
-                                                    <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-gs-green transition-shadow hover:bg-white" placeholder="Doe" />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-bold text-slate-700 mb-1">Email Address</label>
-                                                <input type="email" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-gs-green transition-shadow hover:bg-white" placeholder="john@example.com" />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-bold text-slate-700 mb-1">Phone Number</label>
-                                                <input type="tel" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-gs-green transition-shadow hover:bg-white" placeholder="+234..." />
-                                            </div>
-                                            <div>
-                                                <label className="block text-sm font-bold text-slate-700 mb-1">Message</label>
-                                                <textarea className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 h-32 outline-none focus:ring-2 focus:ring-gs-green transition-shadow hover:bg-white resize-none" placeholder="I am interested in..."></textarea>
-                                            </div>
-                                            <button type="button" className="w-full bg-gs-green text-white py-4 rounded-xl font-bold hover:bg-gs-gold transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
-                                                Send Message <Send size={18} />
-                                            </button>
-                                        </form>
+                                        <h3 className="font-serif text-2xl font-bold text-slate-900 mb-6 px-4 pt-4">Send us a message</h3>
+                                        <div className="relative z-10 h-[44rem] overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+                                            <iframe
+                                                src="https://docs.google.com/forms/d/e/1FAIpQLSfMSHebKU_oQIvkb-UWaGoGwXQ7O0VQJJuvV2jiTTUHa5GVfg/viewform?embedded=true"
+                                                width="640"
+                                                height="961"
+                                                frameBorder="0"
+                                                marginHeight={0}
+                                                marginWidth={0}
+                                                title="Great Success Homes Contact Form"
+                                                className="h-full w-full"
+                                            >
+                                                Loading...
+                                            </iframe>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PropertyCard, MortgageCalculator, FeatureIcon, LogoMarquee, PropertyModal, TestimonialCarousel, EventsCarousel } from './components/Diagrams';
-import { Menu, X, Search, Phone, Mail, MapPin, ArrowRight, Home, Key, Users, Star, CheckCircle, Facebook, Instagram, Twitter, ChevronUp, ArrowUp, DollarSign, Percent, Target, BookOpen, Award, Shield, Send, Clock, Filter, Grid, List, ChevronRight, Play } from 'lucide-react';
+import { Menu, X, Search, Phone, Mail, MapPin, ArrowRight, Home, Key, Users, Star, CheckCircle, Facebook, Instagram, Twitter, ChevronUp, ArrowUp, DollarSign, Percent, Target, BookOpen, Award, Shield, Send, Clock, Filter, Grid, List, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import img1 from './IMG-20251111-WA0045 (11).jpg';
@@ -758,10 +758,10 @@ const App: React.FC = () => {
                                 {/* NEW: Video & Side-by-Side Image Row */}
                                 <div className="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                                     {/* Video Column */}
-                                    <div className="rounded-3xl overflow-hidden shadow-xl relative aspect-video group bg-slate-900">
+                                    <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl bg-slate-950 shadow-2xl">
                                         <video
                                             src={ogaVideo}
-                                            className="w-full h-full object-cover"
+                                            className="aspect-[9/16] w-full object-contain"
                                             controls
                                             playsInline
                                             preload="metadata"
@@ -774,16 +774,18 @@ const App: React.FC = () => {
                                         </div>
                                     </div>
 
-                                    {/* Image Column */}
-                                    <div className="rounded-3xl overflow-hidden shadow-xl aspect-video group relative">
+                                    {/* Verified Brand Column */}
+                                    <div className="relative min-h-[24rem] overflow-hidden rounded-3xl shadow-xl group">
                                         <img
-                                            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                            alt="Exquisite Interior Design of Abuja Luxury Homes"
+                                            src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=900&q=80"
+                                            alt="Professional Real Estate Services in Abuja - Great Success Homes"
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                                             loading="lazy"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
-                                            <p className="text-white font-serif text-2xl font-bold">Excellence in every detail</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-gs-green/95 via-gs-green/35 to-transparent"></div>
+                                        <div className="absolute bottom-8 left-8 right-8 text-white">
+                                            <p className="mb-2 font-serif text-4xl font-bold drop-shadow-md">RC 7937708</p>
+                                            <p className="text-lg font-semibold text-white/90">Verified & Trusted</p>
                                         </div>
                                     </div>
                                 </div>

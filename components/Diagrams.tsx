@@ -101,8 +101,8 @@ export const PropertyCard = ({ title, location, price, beds, baths, sqft, images
         <p className="text-gray-600 text-xs mb-3 flex items-center gap-1"><MapPin size={12} className="text-gs-gold"/> {location}</p>
         
         <div className="flex items-center gap-3 text-xs text-gray-700 mb-4 border-t border-gray-100 pt-3 mt-auto">
-            <div className="flex items-center gap-1"><Bed size={14} className="text-gs-green"/> <span>{beds} Beds</span></div>
-            <div className="flex items-center gap-1"><Bath size={14} className="text-gs-green"/> <span>{baths} Baths</span></div>
+            <div className="flex items-center gap-1"><Bed size={14} className="text-gs-green"/> <span>{beds || '--'} Beds</span></div>
+            <div className="flex items-center gap-1"><Bath size={14} className="text-gs-green"/> <span>{baths || '--'} Baths</span></div>
             <div className="flex items-center gap-1"><Square size={14} className="text-gs-green"/> <span>{sqft || '--'} sqft</span></div>
         </div>
 
@@ -193,11 +193,11 @@ export const PropertyModal = ({ property, onClose }: any) => {
                     <div className="grid grid-cols-3 gap-4 mb-8">
                         <div className="bg-slate-50 p-4 rounded-xl text-center border border-slate-100 hover:border-gs-green/50 transition-colors">
                             <Bed size={24} className="mx-auto mb-2 text-gs-green" />
-                            <div className="font-bold text-slate-900">{property.beds} Bedrooms</div>
+                            <div className="font-bold text-slate-900">{property.beds || 'N/A'} Bedrooms</div>
                         </div>
                         <div className="bg-slate-50 p-4 rounded-xl text-center border border-slate-100 hover:border-gs-green/50 transition-colors">
                             <Bath size={24} className="mx-auto mb-2 text-gs-green" />
-                            <div className="font-bold text-slate-900">{property.baths} Bathrooms</div>
+                            <div className="font-bold text-slate-900">{property.baths || 'N/A'} Bathrooms</div>
                         </div>
                         <div className="bg-slate-50 p-4 rounded-xl text-center border border-slate-100 hover:border-gs-green/50 transition-colors">
                             <Square size={24} className="mx-auto mb-2 text-gs-green" />
@@ -232,7 +232,7 @@ export const PropertyModal = ({ property, onClose }: any) => {
                         rel="noopener noreferrer"
                         className="w-full bg-gs-green text-white py-4 rounded-xl font-bold hover:bg-gs-darkGreen transition-all shadow-lg flex items-center justify-center gap-2 hover:-translate-y-1"
                     >
-                        <Phone size={20} /> Contact Agent
+                        <Phone size={20} /> Contact Consultant
                     </a>
                 </div>
             </motion.div>

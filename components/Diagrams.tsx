@@ -9,7 +9,7 @@ import { Bed, Bath, Square, ArrowRight, DollarSign, Calendar, Percent, ChevronLe
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- PROPERTY CARD ---
-export const PropertyCard = ({ title, location, price, beds, baths, sqft, images = [], video, onClick }: any) => {
+export const PropertyCard = ({ title, location, price, beds, baths, sqft, images = [], video, videos = [], onClick }: any) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -18,8 +18,9 @@ export const PropertyCard = ({ title, location, price, beds, baths, sqft, images
     `https://images.unsplash.com/photo-1600596542815-60c37c6525fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`,
     `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`
   ];
-  const mediaItems = video
-    ? [{ type: 'video', src: video }, ...images.map((src: string) => ({ type: 'image', src }))]
+  const displayVideos = videos.length > 0 ? videos : video ? [video] : [];
+  const mediaItems = displayVideos.length > 0
+    ? [...displayVideos.map((src: string) => ({ type: 'video', src })), ...images.map((src: string) => ({ type: 'image', src }))]
     : displayImages.map((src: string) => ({ type: 'image', src }));
   const currentMedia = mediaItems[currentImgIndex];
 
@@ -121,8 +122,9 @@ export const PropertyModal = ({ property, onClose }: any) => {
     const displayImages = property.images.length > 0 ? property.images : [
         "https://images.unsplash.com/photo-1600596542815-60c37c6525fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     ];
-    const mediaItems = property.video
-        ? [{ type: 'video', src: property.video }, ...property.images.map((src: string) => ({ type: 'image', src }))]
+    const propertyVideos = property.videos?.length > 0 ? property.videos : property.video ? [property.video] : [];
+    const mediaItems = propertyVideos.length > 0
+        ? [...propertyVideos.map((src: string) => ({ type: 'video', src })), ...property.images.map((src: string) => ({ type: 'image', src }))]
         : displayImages.map((src: string) => ({ type: 'image', src }));
     const [currentImgIndex, setCurrentImgIndex] = useState(0);
     const currentMedia = mediaItems[currentImgIndex];

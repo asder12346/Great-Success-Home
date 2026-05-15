@@ -30,6 +30,8 @@ import peculiarEstateImg4 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/What
 import peculiarEstateImg5 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.49 PM (1).jpeg';
 import kubwaSemiDetachedVideo from './WhatsApp Video 2026-05-15 at 4.04.18 PM.mp4';
 import lifecampDetachedBqVideo from './BQ.mp4';
+import utakoTerraceVideo1 from './111.mp4';
+import utakoTerraceVideo2 from './112.mp4';
 import detachedDuplexImg from './detached duplex.jpeg';
 import companyLogo from './GS HOME.png';
 import eidMubarakImg from './eid mubarak.jpeg';
@@ -148,6 +150,28 @@ const PROPERTIES_LIST = [
         images: []
     },
     {
+        id: 13,
+        title: "Brand New 4 Bedroom Terrace Duplex with Attached BQ",
+        location: "Utako District, FCT Abuja",
+        price: "₦550,000,000 (Slightly Negotiable)",
+        beds: 4,
+        baths: 4,
+        sqft: null,
+        category: "Terrace Duplex",
+        description: "Brand new four-bedroom terrace duplex with an attached BQ, available for outright sale in Utako District, FCT Abuja. All rooms are en suite and the property has FCDA approved C of O certificate.",
+        features: [
+            "Brand new 4 bedroom terrace duplex",
+            "Attached BQ",
+            "All rooms en suite",
+            "Available for outright sale",
+            "Located in Utako District, FCT Abuja",
+            "FCDA approved C of O certificate",
+            "Price is 550M, slightly negotiable"
+        ],
+        videos: [utakoTerraceVideo1, utakoTerraceVideo2],
+        images: []
+    },
+    {
         id: 1,
         title: "5 bedroom fully detached duplex with a BQ",
         location: "Gwarimpa Main, Abuja",
@@ -246,7 +270,7 @@ const PROPERTIES_LIST = [
 ];
 
 // Combine properties to simulate a fuller list for the properties page
-const FULL_PROPERTIES_LIST = [...PROPERTIES_LIST, ...PROPERTIES_LIST.filter((item) => ![9, 10, 11, 12].includes(item.id))].map((item, index) => ({
+const FULL_PROPERTIES_LIST = [...PROPERTIES_LIST, ...PROPERTIES_LIST.filter((item) => ![9, 10, 11, 12, 13].includes(item.id))].map((item, index) => ({
     ...item,
     id: index + 100 // ensure unique IDs
 }));

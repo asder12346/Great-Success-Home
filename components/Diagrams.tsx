@@ -5,11 +5,11 @@
 */
 
 import React, { useState, useEffect } from 'react';
-import { Bed, Bath, Square, ArrowRight, DollarSign, Calendar, Percent, ChevronLeft, ChevronRight, Camera, Star, Quote, X, MapPin, Phone, Mail, Send } from 'lucide-react';
+import { Bed, Bath, Square, ArrowRight, DollarSign, Calendar, Percent, ChevronLeft, ChevronRight, Camera, Star, Quote, X, MapPin, Phone, Mail, Send, PlayCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- PROPERTY CARD ---
-export const PropertyCard = ({ title, location, price, beds, baths, sqft, images = [], onClick }: any) => {
+export const PropertyCard = ({ title, location, price, beds, baths, sqft, images = [], video, onClick }: any) => {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -18,13 +18,17 @@ export const PropertyCard = ({ title, location, price, beds, baths, sqft, images
     `https://images.unsplash.com/photo-1600596542815-60c37c6525fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`,
     `https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80`
   ];
+  const mediaItems = video
+    ? [{ type: 'video', src: video }, ...images.map((src: string) => ({ type: 'image', src }))]
+    : displayImages.map((src: string) => ({ type: 'image', src }));
+  const currentMedia = mediaItems[currentImgIndex];
 
   const nextImage = () => {
-    setCurrentImgIndex((prev) => (prev + 1) % displayImages.length);
+    setCurrentImgIndex((prev) => (prev + 1) % mediaItems.length);
   };
 
   const prevImage = () => {
-    setCurrentImgIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length);
+    setCurrentImgIndex((prev) => (prev - 1 + mediaItems.length) % mediaItems.length);
   };
 
   return (
@@ -35,40 +39,59 @@ export const PropertyCard = ({ title, location, price, beds, baths, sqft, images
     >
       {/* Image Carousel Area */}
       <div className="h-48 relative overflow-hidden" onClick={onClick}>
-        <AnimatePresence initial={false}>
-            <motion.img 
-                key={currentImgIndex}
-                src={displayImages[currentImgIndex]} 
-                alt={`${title} - View ${currentImgIndex + 1}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+        {currentMedia.type === 'video' ? (
+            <video
+                key={currentMedia.src}
+                src={currentMedia.src}
                 className="w-full h-full object-cover"
+                muted
+                loop
+                playsInline
+                autoPlay
             />
-        </AnimatePresence>
+        ) : (
+            <AnimatePresence initial={false}>
+                <motion.img
+                    key={currentImgIndex}
+                    src={currentMedia.src}
+                    alt={`${title} in ${location} - Abuja Real Estate View ${currentImgIndex + 1}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                />
+            </AnimatePresence>
+        )}
         
         <div className="absolute top-2 right-2 bg-black/60 text-white px-2 py-1 rounded-md text-xs font-semibold">
-            {currentImgIndex + 1}/{displayImages.length}
+            {currentImgIndex + 1}/{mediaItems.length}
         </div>
 
+        {currentMedia.type === 'video' && (
+            <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-white/90 px-2 py-1 text-xs font-bold text-gs-green shadow-sm">
+                <PlayCircle size={14} /> Video
+            </div>
+        )}
+
         {/* Navigation Buttons */}
-        <div className={`absolute inset-y-0 left-0 flex items-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+        {mediaItems.length > 1 && <div className={`absolute inset-y-0 left-0 flex items-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
              <button 
                 onClick={(e) => { e.stopPropagation(); prevImage(); }}
                 className="p-2 rounded-full bg-white/80 text-gray-800 shadow-md m-2 hover:bg-white"
             >
                 <ChevronLeft size={18} />
             </button>
-        </div>
-        <div className={`absolute inset-y-0 right-0 flex items-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+        </div>}
+        {mediaItems.length > 1 && <div className={`absolute inset-y-0 right-0 flex items-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
              <button 
                 onClick={(e) => { e.stopPropagation(); nextImage(); }}
                 className="p-2 rounded-full bg-white/80 text-gray-800 shadow-md m-2 hover:bg-white"
             >
                 <ChevronRight size={18} />
             </button>
-        </div>
+        </div>}
       </div>
 
       {/* Content */}
@@ -98,7 +121,11 @@ export const PropertyModal = ({ property, onClose }: any) => {
     const displayImages = property.images.length > 0 ? property.images : [
         "https://images.unsplash.com/photo-1600596542815-60c37c6525fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
     ];
+    const mediaItems = property.video
+        ? [{ type: 'video', src: property.video }, ...property.images.map((src: string) => ({ type: 'image', src }))]
+        : displayImages.map((src: string) => ({ type: 'image', src }));
     const [currentImgIndex, setCurrentImgIndex] = useState(0);
+    const currentMedia = mediaItems[currentImgIndex];
 
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -121,18 +148,29 @@ export const PropertyModal = ({ property, onClose }: any) => {
 
                 {/* Left: Image Gallery */}
                 <div className="w-full md:w-1/2 bg-slate-100 relative h-64 md:h-auto">
-                    <img 
-                        src={displayImages[currentImgIndex]} 
-                        alt={property.title}
-                        className="w-full h-full object-cover"
-                    />
+                    {currentMedia.type === 'video' ? (
+                        <video
+                            src={currentMedia.src}
+                            className="w-full h-full object-cover"
+                            controls
+                            playsInline
+                        />
+                    ) : (
+                        <img
+                            src={currentMedia.src}
+                            alt={`${property.title} - ${property.location}, Abuja Property Details`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                        />
+                    )}
                     {/* Carousel Controls */}
                     <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
-                        {displayImages.map((img: string, idx: number) => (
+                        {mediaItems.map((item: any, idx: number) => (
                             <button 
                                 key={idx}
                                 onClick={() => setCurrentImgIndex(idx)}
                                 className={`rounded-full transition-all border border-white/50 shadow-sm ${currentImgIndex === idx ? 'bg-gs-gold w-6 h-2' : 'bg-white w-2 h-2 hover:bg-gs-gold'}`}
+                                aria-label={`Show ${item.type} ${idx + 1}`}
                             />
                         ))}
                     </div>
@@ -172,9 +210,28 @@ export const PropertyModal = ({ property, onClose }: any) => {
                         </p>
                     </div>
 
-                    <button className="w-full bg-gs-green text-white py-4 rounded-xl font-bold hover:bg-gs-darkGreen transition-all shadow-lg flex items-center justify-center gap-2 hover:-translate-y-1">
+                    {property.features?.length > 0 && (
+                        <div className="space-y-4 mb-8">
+                            <h4 className="font-bold text-slate-900">Features</h4>
+                            <ul className="grid grid-cols-1 gap-3 text-sm text-slate-600">
+                                {property.features.map((feature: string) => (
+                                    <li key={feature} className="flex items-start gap-3">
+                                        <span className="mt-2 h-2 w-2 rounded-full bg-gs-green shrink-0" />
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <a
+                        href="https://wa.link/uaafhw"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full bg-gs-green text-white py-4 rounded-xl font-bold hover:bg-gs-darkGreen transition-all shadow-lg flex items-center justify-center gap-2 hover:-translate-y-1"
+                    >
                         <Phone size={20} /> Contact Agent
-                    </button>
+                    </a>
                 </div>
             </motion.div>
         </div>
@@ -407,8 +464,9 @@ export const EventCard = ({ title, date, location, description, image, onClick }
             <div className="relative h-64 overflow-hidden">
                 <img 
                     src={image} 
-                    alt={title} 
+                    alt={`${title} - Great Success Homes Event in ${location}, Abuja`} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    loading="lazy"
                 />
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm">
                     <div className="flex items-center gap-2 text-gs-green font-bold text-sm">

@@ -23,6 +23,14 @@ import img10 from './IMG-20251111-WA0045.jpg';
 import whatsAppImg1 from './WhatsApp-Image-2025-08-06-at-17.48.35_c5d1c179.jpg';
 import whatsAppImg2 from './WhatsApp-Image-2025-08-06-at-17.48.36_215c0fe8.jpg';
 import whatsAppImg3 from './WhatsApp-Image-2025-08-16-at-21.12.53_d33c1739.jpg';
+import peculiarEstateImg1 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.47 PM (1).jpeg';
+import peculiarEstateImg2 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.47 PM.jpeg';
+import peculiarEstateImg3 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.48 PM (1).jpeg';
+import peculiarEstateImg4 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.48 PM.jpeg';
+import peculiarEstateImg5 from './WhatsApp Unknown 2026-05-15 at 4.17.39 PM/WhatsApp Image 2026-05-15 at 4.02.49 PM (1).jpeg';
+import kubwaSemiDetachedVideo from './WhatsApp Video 2026-05-15 at 4.04.18 PM.mp4';
+import lifecampDetachedBqVideo from './BQ.mp4';
+import detachedDuplexImg from './detached duplex.jpeg';
 import companyLogo from './GS HOME.png';
 import eidMubarakImg from './eid mubarak.jpeg';
 import meetingImg from './meeting.jpeg';
@@ -47,6 +55,98 @@ const NAV_LINKS = [
 
 // Expanded Properties Data based on prompt
 const PROPERTIES_LIST = [
+    {
+        id: 9,
+        title: "Exquisitely Built 4 Bedroom Duplex",
+        location: "Peculiar Estate, Lokogoma District, Abuja",
+        price: "₦250,000,000 (Negotiable)",
+        beds: 4,
+        baths: 4,
+        sqft: null,
+        category: "Duplex",
+        description: "Located in a serene and secure estate in Lokogoma District, Abuja, this exquisitely built four-bedroom duplex in Peculiar Estate offers generous living spaces, strong utilities, and practical access from Apo Mechanic, Sunny Vale Junction, and Lokogoma Junction.",
+        features: [
+            "Exquisitely built four-bedroom duplex",
+            "Two rooms self-contained BQ",
+            "Self-contained gatehouse",
+            "Automatic change over switch",
+            "Latest design stamped compound floor",
+            "Independent water source (borehole)",
+            "Family lounge",
+            "Visitors' lounge",
+            "Biodigester sewage system",
+            "Expansive compound with space for 7 cars",
+            "Four minutes drive to tarred road",
+            "Thirteen minutes drive from Sunny Vale Junction",
+            "Accessible from Apo Mechanic, Sunny Vale Junction, and Lokogoma Junction"
+        ],
+        images: [peculiarEstateImg1, peculiarEstateImg2, peculiarEstateImg3, peculiarEstateImg4, peculiarEstateImg5]
+    },
+    {
+        id: 10,
+        title: "Brand New 4 Bedroom Semi Detached Duplex",
+        location: "F01, Kubwa, FCT Abuja",
+        price: "₦180,000,000",
+        beds: 4,
+        baths: 4,
+        sqft: null,
+        category: "Semi Detached Duplex",
+        description: "Brand new tastefully finished four-bedroom semi detached duplex available for outright sale in a well organized estate in F01, Kubwa, FCT Abuja. Perfect for investment and family comfort.",
+        features: [
+            "4 spacious en suite rooms",
+            "Fully fitted modern kitchen",
+            "Elegant POP ceiling finish",
+            "Large compound with parking space",
+            "Balcony and family lounge",
+            "24-hour security post",
+            "FCDA approved document",
+            "Available for outright sale",
+            "Visit Suite FT-10 Fourth Floor, Alibro Atrium Mall, 32 A E Ekukinam Street, Utako District, FCT, Abuja"
+        ],
+        video: kubwaSemiDetachedVideo,
+        images: []
+    },
+    {
+        id: 11,
+        title: "Brand New Well Finished 4 Bedroom Semi Detached Duplex",
+        location: "F01, Kubwa, FCT Abuja",
+        price: "₦100,000,000 Net",
+        beds: 4,
+        baths: 4,
+        sqft: null,
+        category: "Semi Detached Duplex",
+        description: "Brand new well finished four-bedroom semi detached duplex available for outright sale in F01 Kubwa, FCT Abuja. All rooms are en suite, with FCDA approved C of O certificate.",
+        features: [
+            "Brand new well finished semi detached duplex",
+            "4 bedrooms",
+            "All rooms en suite",
+            "Available for outright sale",
+            "FCDA approved C of O certificate",
+            "Price is 100M net"
+        ],
+        images: [detachedDuplexImg]
+    },
+    {
+        id: 12,
+        title: "4 Bedroom Fully Detached Duplex with Attached BQ",
+        location: "Lifecamp, Abuja",
+        price: "₦230,000,000",
+        beds: 4,
+        baths: 4,
+        sqft: null,
+        category: "Fully Detached Duplex",
+        description: "Tastefully finished four-bedroom fully detached duplex with attached BQ, located in Lifecamp, Abuja. The property comes with FCDA approved C of O certificate.",
+        features: [
+            "4 bedroom fully detached duplex",
+            "Attached BQ",
+            "Tastefully finished",
+            "Located in Lifecamp",
+            "FCDA approved C of O certificate",
+            "Price is 230M"
+        ],
+        video: lifecampDetachedBqVideo,
+        images: []
+    },
     {
         id: 1,
         title: "5 bedroom fully detached duplex with a BQ",
@@ -146,7 +246,7 @@ const PROPERTIES_LIST = [
 ];
 
 // Combine properties to simulate a fuller list for the properties page
-const FULL_PROPERTIES_LIST = [...PROPERTIES_LIST, ...PROPERTIES_LIST].map((item, index) => ({
+const FULL_PROPERTIES_LIST = [...PROPERTIES_LIST, ...PROPERTIES_LIST.filter((item) => ![9, 10, 11, 12].includes(item.id))].map((item, index) => ({
     ...item,
     id: index + 100 // ensure unique IDs
 }));
@@ -368,7 +468,7 @@ const App: React.FC = () => {
                     <div className="flex items-center gap-2 lg:gap-3 cursor-pointer group shrink-0" onClick={() => handleNavClick('home')}>
                         <img src={companyLogo} alt="Great Success Homes Logo" className="w-10 h-10 lg:w-12 lg:h-12" />
                         <div className="block">
-                            <h1 className="font-serif font-bold text-base lg:text-xl leading-none text-slate-900">Great Success</h1>
+                            <div className="font-serif font-bold text-base lg:text-xl leading-none text-slate-900">Great Success</div>
                             <div className="flex items-baseline gap-1 lg:gap-2">
                                 <span className="text-[8px] lg:text-xs tracking-[0.2em] font-bold uppercase text-gs-green whitespace-nowrap">Homes</span>
                                 <span className="text-[7px] lg:text-[10px] font-medium text-slate-500 whitespace-nowrap">RC 7937708</span>
@@ -451,8 +551,9 @@ const App: React.FC = () => {
                                 <div className="relative w-full h-[600px] lg:h-[750px] overflow-hidden shadow-2xl bg-slate-900 group">
                                     <img
                                         src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
-                                        alt="Luxury Modern Home"
+                                        alt="Luxury Modern Real Estate in Abuja - Great Success Homes"
                                         className="w-full h-full object-cover opacity-90 scale-105 group-hover:scale-110 transition-transform duration-[20s]"
+                                        loading="eager"
                                     />
                                     {/* Darker Overlay for text contrast */}
                                     <div className="absolute inset-0 bg-black/30"></div>
@@ -552,7 +653,7 @@ const App: React.FC = () => {
                                     {/* Right: Images */}
                                     <div className="relative flex justify-center lg:justify-end">
                                         <div className="aspect-[4/5] w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-2xl relative z-10 group">
-                                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="About Great Success Homes" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                                            <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Professional Real Estate Services in Abuja - Great Success Homes" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-gs-green/90 to-transparent"></div>
                                             <div className="absolute bottom-8 left-8 text-white">
                                                 <p className="font-serif text-2xl font-bold">RC 7937708</p>
@@ -568,8 +669,9 @@ const App: React.FC = () => {
                                     <div className="rounded-3xl overflow-hidden shadow-xl relative aspect-video group cursor-pointer hover:border-gs-gold/50 transition-colors">
                                         <img
                                             src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                            alt="Company Overview Video"
+                                            alt="Great Success Homes Corporate Overview and Property Showcase"
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                                             <div className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/50 shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -586,8 +688,9 @@ const App: React.FC = () => {
                                     <div className="rounded-3xl overflow-hidden shadow-xl aspect-video group relative">
                                         <img
                                             src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                            alt="Luxury Interior"
+                                            alt="Exquisite Interior Design of Abuja Luxury Homes"
                                             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            loading="lazy"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
                                             <p className="text-white font-serif text-2xl font-bold">Excellence in every detail</p>
@@ -744,8 +847,9 @@ const App: React.FC = () => {
                                             <div className="relative aspect-square overflow-hidden bg-slate-200">
                                                 <img
                                                     src={member.image}
-                                                    alt={member.name}
+                                                    alt={`${member.name} - ${member.role} at Great Success Homes, Abuja`}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter grayscale group-hover:grayscale-0"
+                                                    loading="lazy"
                                                 />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 backdrop-blur-sm">
                                                     <button className="p-3 bg-white text-slate-900 rounded-full hover:bg-gs-gold hover:text-white transition-colors shadow-lg"><Phone size={20} /></button>
@@ -829,7 +933,7 @@ const App: React.FC = () => {
                                             transition={{ duration: 0.5, delay: idx * 0.1 }}
                                             className="group relative overflow-hidden rounded-3xl aspect-[4/3] shadow-lg cursor-pointer"
                                         >
-                                            <img src={item.url} alt={item.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                            <img src={item.url} alt={`${item.title} - Great Success Homes Abuja`} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
                                                 <span className="text-gs-gold text-xs font-bold uppercase tracking-widest mb-2">{item.category}</span>
                                                 <h4 className="text-white text-xl font-bold">{item.title}</h4>
@@ -1037,12 +1141,32 @@ const App: React.FC = () => {
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.5 }}
                         onClick={scrollToTop}
-                        className="fixed bottom-8 right-8 z-50 bg-gs-gold text-white p-4 rounded-full shadow-2xl hover:bg-gs-green transition-colors hover:-translate-y-1"
+                        className="fixed bottom-28 right-6 md:right-8 z-50 bg-gs-gold text-white p-4 rounded-full shadow-2xl hover:bg-gs-green transition-colors hover:-translate-y-1"
                     >
                         <ArrowUp size={24} />
                     </motion.button>
                 )}
             </AnimatePresence>
+
+            {/* Floating WhatsApp Button */}
+            <a
+                href="https://wa.link/uaafhw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-[0_18px_40px_rgba(37,211,102,0.35)] ring-4 ring-white/90 hover:bg-[#128C7E] transition-all duration-300 hover:-translate-y-1 hover:scale-105 group flex items-center justify-center"
+                aria-label="Chat with us on WhatsApp"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    stroke="none"
+                >
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
+                </svg>
+            </a>
 
             {/* PROPERTY MODAL POPUP */}
             <AnimatePresence>

@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PropertyCard, MortgageCalculator, FeatureIcon, LogoMarquee, PropertyModal, TestimonialCarousel, EventsCarousel } from './components/Diagrams';
-import { Menu, X, Search, Phone, Mail, MapPin, ArrowRight, Home, Key, Users, Star, CheckCircle, Facebook, Instagram, Twitter, ChevronUp, ArrowUp, DollarSign, Percent, Target, BookOpen, Award, Shield, Send, Clock, Filter, Grid, List, ChevronRight } from 'lucide-react';
+import { Menu, X, Search, Phone, Mail, MapPin, ArrowRight, Home, Key, Users, Star, CheckCircle, Facebook, Instagram, Twitter, ChevronUp, ArrowUp, DollarSign, Percent, Target, BookOpen, Award, Shield, Send, Clock, Filter, Grid, List, ChevronRight, Mic, Volume2, MessageCircle, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import img1 from './IMG-20251111-WA0045 (11).jpg';
@@ -317,6 +317,9 @@ const FULL_PROPERTIES_LIST = [...PROPERTIES_LIST, ...PROPERTIES_LIST.filter((ite
     id: index + 100 // ensure unique IDs
 }));
 
+const ASSISTANT_STARTER_MESSAGE = "Hello, I am Great Success Homes' AI Voice Property Assistant. I can help with currently listed properties, prices, locations, inspections, documentation, and consultant contact details.";
+const ASSISTANT_FALLBACK_MESSAGE = "I do not currently have that information on this website. I can connect you with a property consultant or help you book a site inspection.";
+
 const TEAM_MEMBERS = [
     {
         name: "Akachukwu C.J Azubike Esq.",
@@ -475,6 +478,11 @@ const App: React.FC = () => {
     const [scrolled, setScrolled] = useState(false);
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [showWhatsAppPrompt, setShowWhatsAppPrompt] = useState(false);
+    const [showAssistant, setShowAssistant] = useState(false);
+    const [assistantQuestion, setAssistantQuestion] = useState('');
+    const [assistantAnswer, setAssistantAnswer] = useState(ASSISTANT_STARTER_MESSAGE);
+    const [assistantListening, setAssistantListening] = useState(false);
+    const [assistantStatus, setAssistantStatus] = useState('Voice and text ready');
     const [selectedProperty, setSelectedProperty] = useState<any>(null);
 
     useEffect(() => {
@@ -549,6 +557,156 @@ const App: React.FC = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const speakAssistantAnswer = (text: string) => {
+        if (!('speechSynthesis' in window)) {
+            setAssistantStatus('Voice is unavailable on this browser. Showing text answer.');
+            return;
+        }
+
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.94;
+        utterance.pitch = 1;
+        utterance.lang = 'en-US';
+        utterance.onstart = () => setAssistantStatus('Speaking now');
+        utterance.onend = () => setAssistantStatus('Voice and text ready');
+        utterance.onerror = () => setAssistantStatus('Voice had an issue. Showing text answer.');
+        window.speechSynthesis.speak(utterance);
+    };
+
+    const getAssistantAnswer = (question: string) => {
+        const query = question.toLowerCase();
+        const visibleProperties = PROPERTIES_LIST.map((property) => `${property.title} - ${property.location} - ${property.price}`).join('; ');
+        const matchedProperty = PROPERTIES_LIST.find((property) => {
+            const searchableText = `${property.title} ${property.location} ${property.category}`.toLowerCase();
+            return searchableText.split(/[\s,()-]+/).filter((word) => word.length > 3).some((word) => query.includes(word));
+        });
+
+        if (query.includes('promotion') || query.includes('offer') || query.includes('discount')) {
+            return "I do not currently see any promotion or special offer details listed on this website. Please contact a property consultant to confirm current offers.";
+        }
+
+        if (query.includes('investment') || query.includes('invest') || query.includes('land banking')) {
+            return "Great Success Homes offers property investment opportunities and land banking. Specific investment terms are not listed here, so a consultant can guide you based on your budget and goals.";
+        }
+
+        if (query.includes('available') || query.includes('property') || query.includes('properties')) {
+            return `These are the currently listed properties on this website: ${visibleProperties}. Would you like to book a site inspection or make an inquiry?`;
+        }
+
+        if (query.includes('price') || query.includes('cost') || query.includes('budget') || query.includes('how much')) {
+            if (matchedProperty) {
+                return `The current listed price for ${matchedProperty.title} in ${matchedProperty.location} is ${matchedProperty.price}. Prices may be updated, so would you like to schedule a site inspection or speak with a consultant?`;
+            }
+
+            return `Here are the prices currently displayed on this website: ${visibleProperties}. Which property would you like to inspect?`;
+        }
+
+        if (query.includes('location') || query.includes('where') || query.includes('area')) {
+            if (matchedProperty) {
+                return `${matchedProperty.title} is listed at ${matchedProperty.location}. Would you like to book a site inspection?`;
+            }
+
+            return "Currently listed locations include Apo Legislative Quarters, Kubwa, Lokogoma, Lifecamp, Utako, Gwarimpa, Maitama, Guzape, Karsana, and Efab Metropolis Estate. The office is at Suite FT-10, 4th Floor, Alibro Atrium, No. 32 A. E. Ekukinam Street, Utako District, Abuja.";
+        }
+
+        if (query.includes('payment') || query.includes('installment') || query.includes('plan') || query.includes('mortgage')) {
+            return "I do not currently see payment plan details listed for these properties. A property consultant can confirm available payment options for the property you choose.";
+        }
+
+        if (query.includes('feature') || query.includes('amenities') || query.includes('bedroom') || query.includes('bathroom')) {
+            if (matchedProperty) {
+                const details = [
+                    matchedProperty.beds ? `${matchedProperty.beds} bedrooms` : null,
+                    matchedProperty.baths ? `${matchedProperty.baths} bathrooms` : null,
+                    matchedProperty.features?.length ? `features include ${matchedProperty.features.join(', ')}` : matchedProperty.description
+                ].filter(Boolean).join('; ');
+
+                return `${matchedProperty.title}: ${details}. Would you like to book a site inspection?`;
+            }
+
+            return "Please tell me the property name or location so I can check the listed features on this website.";
+        }
+
+        if (query.includes('type') || query.includes('duplex') || query.includes('terrace') || query.includes('land') || query.includes('apartment')) {
+            return "The website currently lists semi-detached terrace duplexes, houses, duplexes, semi detached duplexes, fully detached duplexes, terrace duplexes, luxury homes, luxury stand-alone homes, manor properties, and mega duplexes. Great Success Homes also offers land sales and land banking services.";
+        }
+
+        if (query.includes('inspection') || query.includes('book') || query.includes('visit') || query.includes('tour')) {
+            return "You can book a site inspection by completing the inquiry form, using the WhatsApp button, or contacting a property consultant. Which listed property would you like to inspect?";
+        }
+
+        if (query.includes('document') || query.includes('documentation') || query.includes('title') || query.includes('c of o') || query.includes('certificate')) {
+            if (matchedProperty?.features?.some((feature: string) => feature.toLowerCase().includes('c of o') || feature.toLowerCase().includes('document') || feature.toLowerCase().includes('certificate'))) {
+                const documentFeatures = matchedProperty.features.filter((feature: string) => {
+                    const lowerFeature = feature.toLowerCase();
+                    return lowerFeature.includes('c of o') || lowerFeature.includes('document') || lowerFeature.includes('certificate');
+                }).join(', ');
+
+                return `For ${matchedProperty.title}, the listing mentions: ${documentFeatures}. I cannot provide legal advice, but a consultant can help you confirm the documentation.`;
+            }
+
+            return "I do not currently have full documentation requirements listed on this website. Some listings mention FCDA approved C of O. Please speak with a property consultant to confirm documents for your chosen property.";
+        }
+
+        if (query.includes('agent') || query.includes('contact') || query.includes('phone') || query.includes('whatsapp') || query.includes('email')) {
+            return "You can contact Great Success Homes on +2348032750759 or +23483799279. Email info@greatsuccesshomesandproperties.com or greatsuccesshomes@gmail.com. WhatsApp is also available from the floating green button.";
+        }
+
+        if (query.includes('ownership') || query.includes('process') || query.includes('buy') || query.includes('purchase')) {
+            return "The full ownership process is not detailed on this website. Great Success Homes helps clients with land sales, residential and commercial properties, advisory, and inspections. A consultant can guide you through the next step.";
+        }
+
+        return ASSISTANT_FALLBACK_MESSAGE;
+    };
+
+    const handleAssistantSubmit = (question: string) => {
+        const trimmedQuestion = question.trim();
+        const answer = trimmedQuestion ? getAssistantAnswer(trimmedQuestion) : ASSISTANT_STARTER_MESSAGE;
+        setAssistantQuestion(trimmedQuestion);
+        setAssistantAnswer(answer);
+        speakAssistantAnswer(answer);
+    };
+
+    const openAssistant = () => {
+        setShowAssistant(true);
+        setAssistantAnswer(ASSISTANT_STARTER_MESSAGE);
+        window.setTimeout(() => speakAssistantAnswer(ASSISTANT_STARTER_MESSAGE), 250);
+    };
+
+    const startAssistantListening = () => {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            setAssistantStatus('Voice input is unavailable. Type your question below.');
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+            setAssistantListening(true);
+            setAssistantStatus('Listening for your question');
+        };
+        recognition.onresult = (event: any) => {
+            const spokenQuestion = event.results?.[0]?.[0]?.transcript || '';
+            setAssistantQuestion(spokenQuestion);
+            handleAssistantSubmit(spokenQuestion);
+        };
+        recognition.onerror = () => {
+            setAssistantStatus('Voice input had an issue. Type your question below.');
+        };
+        recognition.onend = () => {
+            setAssistantListening(false);
+            setAssistantStatus('Voice and text ready');
+        };
+
+        recognition.start();
+    };
+
     return (
         <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-gs-green selection:text-white">
 
@@ -590,13 +748,13 @@ const App: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Right Side: Speak with HR & Mobile Toggle */}
+                    {/* Right Side: AI Assistant & Mobile Toggle */}
                     <div className="flex items-center gap-2 lg:gap-4 shrink-0">
                         <button
-                            onClick={() => handleNavClick('contact')}
+                            onClick={openAssistant}
                             className="hidden md:block bg-gs-green text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-xs lg:text-sm font-bold hover:bg-gs-gold transition-all shadow-lg hover:shadow-gs-green/30 border border-white/20 transform hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
                         >
-                            Speak with HR
+                            AI Property Assistant
                         </button>
 
                         {/* Mobile Menu Toggle */}
@@ -623,10 +781,13 @@ const App: React.FC = () => {
                                 </button>
                             ))}
                             <button
-                                onClick={() => { window.location.href = 'tel:+2348032750759'; }}
+                                onClick={() => {
+                                    setMenuOpen(false);
+                                    openAssistant();
+                                }}
                                 className="bg-gs-green text-white px-6 py-3 rounded-full mt-4 font-bold"
                             >
-                                Speak with HR
+                                AI Property Assistant
                             </button>
                         </div>
                     </motion.div>
@@ -1250,35 +1411,145 @@ const App: React.FC = () => {
             <AnimatePresence>
                 {showWhatsAppPrompt && (
                     <motion.div
-                        initial={{ opacity: 0, y: 24, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 16, scale: 0.96 }}
-                        className="fixed bottom-24 right-6 md:bottom-28 md:right-8 z-50 w-[min(calc(100vw-3rem),22rem)] overflow-hidden rounded-2xl border border-emerald-100 bg-white shadow-2xl"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 backdrop-blur-sm"
+                        onClick={() => setShowWhatsAppPrompt(false)}
                     >
-                        <button
-                            onClick={() => setShowWhatsAppPrompt(false)}
-                            className="absolute right-3 top-3 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
-                            aria-label="Close WhatsApp message prompt"
+                        <motion.div
+                            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                            className="relative w-full max-w-md overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
+                            onClick={(event) => event.stopPropagation()}
                         >
-                            <X size={18} />
-                        </button>
-                        <div className="p-5 pr-10">
-                            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg">
-                                <Phone size={22} />
-                            </div>
-                            <h3 className="mb-2 font-serif text-xl font-bold text-slate-900">Message us on WhatsApp</h3>
-                            <p className="mb-4 text-sm leading-relaxed text-slate-600">
-                                Speak with a consultant about available properties, inspections, and current offers.
-                            </p>
-                            <a
-                                href="https://wa.link/uaafhw"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-lg transition-colors hover:bg-[#128C7E]"
+                            <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-[#25D366] via-gs-green to-gs-gold"></div>
+                            <button
+                                onClick={() => setShowWhatsAppPrompt(false)}
+                                className="absolute right-4 top-4 rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                                aria-label="Close WhatsApp message prompt"
                             >
-                                Message on WhatsApp <ArrowRight size={16} />
-                            </a>
-                        </div>
+                                <X size={18} />
+                            </button>
+                            <div className="p-7 pt-9 text-center">
+                                <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#25D366] text-white shadow-xl shadow-emerald-500/25">
+                                    <MessageCircle size={30} />
+                                </div>
+                                <h3 className="mb-2 font-serif text-2xl font-bold text-slate-900">Message us on WhatsApp</h3>
+                                <p className="mx-auto mb-6 max-w-xs text-sm leading-relaxed text-slate-600">
+                                    Speak with a consultant about available properties, site inspections, prices, and current offers.
+                                </p>
+                                <a
+                                    href="https://wa.link/uaafhw"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-colors hover:bg-[#128C7E]"
+                                >
+                                    Message on WhatsApp <ArrowRight size={16} />
+                                </a>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {showAssistant && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 backdrop-blur-sm"
+                        onClick={() => {
+                            window.speechSynthesis?.cancel();
+                            setShowAssistant(false);
+                        }}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, y: 20, scale: 0.96 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 12, scale: 0.96 }}
+                            className="relative w-full max-w-xl overflow-hidden rounded-3xl border border-gs-green/10 bg-white shadow-[0_30px_90px_rgba(15,23,42,0.32)]"
+                            onClick={(event) => event.stopPropagation()}
+                        >
+                            <div className="bg-gs-green px-6 py-5 text-white">
+                                <button
+                                    onClick={() => {
+                                        window.speechSynthesis?.cancel();
+                                        setShowAssistant(false);
+                                    }}
+                                    className="absolute right-4 top-4 rounded-full p-2 text-white/80 hover:bg-white/10 hover:text-white"
+                                    aria-label="Close AI Property Assistant"
+                                >
+                                    <X size={18} />
+                                </button>
+                                <div className="flex items-center gap-4 pr-10">
+                                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gs-gold text-slate-950 shadow-lg">
+                                        <Sparkles size={28} />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-gs-gold">Voice Assistant</p>
+                                        <h3 className="font-serif text-2xl font-bold">AI Property Assistant</h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-5 p-6">
+                                <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                                    <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gs-green">
+                                        <Volume2 size={16} /> Assistant Reply
+                                    </div>
+                                    <p className="text-sm leading-relaxed text-slate-700">{assistantAnswer}</p>
+                                </div>
+
+                                <div className="flex flex-wrap gap-2">
+                                    {['Available properties', 'Property prices', 'Book site inspection', 'Documentation requirements'].map((prompt) => (
+                                        <button
+                                            key={prompt}
+                                            onClick={() => handleAssistantSubmit(prompt)}
+                                            className="rounded-full border border-gs-green/15 bg-gs-lightGreen px-3 py-2 text-xs font-bold text-gs-green transition-colors hover:bg-gs-green hover:text-white"
+                                        >
+                                            {prompt}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <form
+                                    onSubmit={(event) => {
+                                        event.preventDefault();
+                                        handleAssistantSubmit(assistantQuestion);
+                                    }}
+                                    className="space-y-3"
+                                >
+                                    <label htmlFor="assistant-question" className="sr-only">Ask the AI Property Assistant</label>
+                                    <input
+                                        id="assistant-question"
+                                        value={assistantQuestion}
+                                        onChange={(event) => setAssistantQuestion(event.target.value)}
+                                        placeholder="Ask about prices, locations, payment plans..."
+                                        className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition-colors focus:border-gs-green focus:ring-4 focus:ring-gs-green/10"
+                                    />
+                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-[auto,1fr]">
+                                        <button
+                                            type="button"
+                                            onClick={startAssistantListening}
+                                            className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white shadow-lg transition-all ${assistantListening ? 'bg-gs-gold text-slate-950' : 'bg-gs-green hover:bg-gs-darkGreen'}`}
+                                        >
+                                            <Mic size={18} /> {assistantListening ? 'Listening...' : 'Ask by Voice'}
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className="inline-flex items-center justify-center gap-2 rounded-full bg-gs-gold px-5 py-3 text-sm font-bold text-slate-950 shadow-lg transition-colors hover:bg-white hover:text-gs-green hover:ring-2 hover:ring-gs-gold"
+                                        >
+                                            Get Answer <ArrowRight size={18} />
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <p className="text-center text-xs font-medium text-slate-500">{assistantStatus}</p>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
